@@ -1,6 +1,9 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+!win_x64/*.pyd
+!win_x86/*.pyd
+!osx/*.pyd
 
 # C extensions
 *.so
@@ -21,6 +24,20 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Output data
+*.dat
+*.png
+
+# Input data
+*.csv
+*.asc
+*.xls
+
+# Personal folders
+FirstResults/
+Old_py_files/
+output/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
