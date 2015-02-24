@@ -29,6 +29,8 @@ How to run simulations with EponaGC
 
 Most of the setup for a simulation occurs in the Param.ini file and, in the case of network interactions, the Graph.ini file. You can also apply control on the continuous spatial domain using Cntrl.py. Once these are to your liking, simply run the EponaGC.py script. Press return at the menu, and you will be prompted as to whether or not a transportation network is coupled in the simulation. If yes, information about the network will be pulled from Graph.ini. You will also be given the option to use control as specified in Cntrl.py - Cntrl.py is ignored if n is selected. The simulation will then proceed to run, reporting the current time solved and the current time step, which will be adjusted automatically as the stiffness of the problem allows.
 
+If you would like to begin by reproducing the results of Strickland et al., all the necessary data has been provided in data/data.zip. Just use the default parameters.
+
 ### Param.ini and importing data
 
 All non-network information about the current simulation is specified here, including the location of necessary data. An explanation of each of the entries follows.
