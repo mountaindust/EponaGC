@@ -50,7 +50,7 @@ def main():
                         Gu = cPickle.load(fobj)
                         fobj.close()
                     except IOError as e:
-                        print "I/O error: {0}".format(e.message)
+                        print "I/O error: {0}".format(e.strerror)
                         continue
                     Plot.Graph(S,C,L,Gu)
                     break
@@ -66,6 +66,7 @@ def main():
                         filename = filename+'.dat'
                     #read data
                     try:
+                        print('Loading data...')
                         fobj = open(filename, 'r')
                         u = cPickle.load(fobj)
                         initdata = cPickle.load(fobj)
@@ -79,7 +80,7 @@ def main():
                         nodeloc = cPickle.load(fobj)
                         fobj.close()
                     except IOError as e:
-                        print "I/O error: {0}".format(e.message)
+                        print "I/O error: {0}".format(e.strerror)
                         continue
                     except EOFError:
                         #Compatability with non-graph version

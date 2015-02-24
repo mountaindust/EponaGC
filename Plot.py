@@ -75,7 +75,7 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
                         suit = suit[::-1,:]
                         suit_mode = 0
                     except IOError as e:
-                        print "I/O error: {0}".format(e.message)
+                        print "I/O error: {0}".format(e.strerror)
                         continue
                 else:
                     if '.dat' not in filename:
@@ -89,7 +89,7 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
                         suit = suit[::-1,:]
                         suit_mode = 0
                     except IOError as e:
-                        print "I/O error: {0}".format(e.message)
+                        print "I/O error: {0}".format(e.strerror)
                         continue
                     
             #once loaded:        
@@ -123,16 +123,27 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
         else:
             plotvalues = np.ma.array(u[tt,::-1,:]*suit,\
                 mask = u[tt,::-1,:] < negval, fill_value = 0)
-        #color
-        #cmap = cm.jet
+                
+        #prompt for color or B/W
+        c_switch = raw_input(''.join(["Hit enter for color ", \
+                "or input any character for B/W:"]))
+        c_switch = c_switch.strip()
+        if c_switch == '':
+            #color
+            #cmap = cm.gist_earth_r
+            #take a portion of the gist_earth_r colormap
+            cmap = cm.colors.LinearSegmentedColormap.from_list(\
+                'trunc({n},{a:.2f},{b:.2f})'.format(n=cm.gist_earth_r,\
+                a=0.15, b=0.85), cm.gist_earth_r(np.linspace(0.15,0.85,100)))
+        else:
+            #grayscale. want to leave out black, so need a new colormap
+            #get a grayscale colormap with 10000 steps
+            rgba_array = cm.binary(np.linspace(0,1,num=10000,endpoint=True))
+            #get 10%-70% of it. This is our new colormap.
+            extract_rgba_array_255 = rgba_array[1000:7000,0:3]
+            cmap = cm.colors.ListedColormap(extract_rgba_array_255)
         
-        #grayscale. want to leave out black, so need a new colormap
-        #get a grayscale colormap with 10000 steps
-        rgba_array = cm.binary(np.linspace(0,1,num=10000,endpoint=True))
-        #get the first 80% of it. This is our new colormap.
-        extract_rgba_array_255 = rgba_array[0:8000,0:3]
-        cmap = cm.colors.ListedColormap(extract_rgba_array_255)
-        
+        print('Rendering...')
         cmap.set_bad('w',1.)
         mpl.rc('xtick', labelsize=18)
         mpl.rc('ytick', labelsize=18)
@@ -142,10 +153,10 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
         plt.xlabel('UTM Easting',fontsize=24)
         plt.ylabel('UTM Northing',fontsize=24)
         if suit_mode < 2:
-            plt.title('Species Presence Probability Map, time='+str(tt),\
+            plt.title('Species Range Probability at Year '+str(tt),\
             fontsize=36)
         else:
-            plt.title('Species Presence Probability Map, Scaled, time='+str(tt),\
+            plt.title('Species Presence Probability at Year '+str(tt),\
             fontsize=36)
         plt.hold(True)
         #plot boundary
@@ -158,6 +169,16 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
                 plt.pcolor(xmesh,ymesh,roadmask,norm=roadnorm,cmap=cmaproad)
             except:
                 print 'Error in road raster plot. Layer omitted.'
+        
+        #show original presence data
+        if c_switch == '':
+            #color
+            plt.scatter(xinit,yinit,s=100,c=(0.85,0,0),marker='x',linewidths=3)
+        else:
+            #grayscale
+            plt.scatter(xinit,yinit,s=100,c='k',marker='x',linewidths=3)
+            plt.scatter(xinit,yinit,s=80,c='w',marker='x')
+        
         #plot presence data for most recent year
         if presdata is not None:
             #find the last year <= than the current year in sorted list
@@ -176,13 +197,14 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
                 for row in presdata[year]:
                     xpres.append(row[0])
                     ypres.append(row[1])
-                #color
-                #plt.scatter(xpres,ypres,s=30,c='m')
-                #grayscale
-                plt.scatter(xpres,ypres,s=30,c='w')
-        #show original presence data
-        #c='m', no marker
-        plt.scatter(xinit,yinit,s=50,c='k',marker="x")
+                if c_switch == '':
+                    #color
+                    plt.scatter(xpres,ypres,s=120,c='m',marker='+',linewidths=3)
+                else:
+                    #grayscale
+                    plt.scatter(xpres,ypres,s=120,c='k',marker='+',linewidths=3)
+                    plt.scatter(xpres,ypres,s=96,c='w',marker='+')
+                
         #plot graph node locations
         if nodeloc is not None:
             xloc = []
@@ -190,17 +212,29 @@ def Sol(u, initdata, runtime, xmesh, ymesh, negval, bndrypoints,\
             for row in nodeloc:
                 xloc.append(row[0])
                 yloc.append(row[1])
-            #c='m', alpha=0.7
-            plt.scatter(xloc,yloc,s=30,c='0.75',marker='D')
-        plt.hold(False)
+            if c_switch == '':
+                #color
+                plt.scatter(xloc,yloc,s=120,c=(0,.75,0),marker='H')
+            else:
+                #grayscale
+                plt.scatter(xloc,yloc,s=120,c='w',marker='H')
+        
+        plt.hold(False)      
+        
         if suit_mode == 1 or suit_mode == 3:
             plt.figure()
+            cmap.set_bad('w',1.)
+            mpl.rc('xtick', labelsize=18)
+            mpl.rc('ytick', labelsize=18)
             plt.pcolor(xmesh,ymesh,suit,norm=mynorm,cmap=cmap)
             plt.autoscale(tight=True)
             plt.colorbar(ticks=np.linspace(0,1,11))
-            plt.xlabel('UTM Easting')
-            plt.ylabel('UTM Northing')
-            plt.title('Species Suitability Map')
+            plt.xlabel('UTM Easting',fontsize=24)
+            plt.ylabel('UTM Northing',fontsize=24)
+            plt.title('Species Suitability Map',fontsize=36)
+            plt.hold(True)
+            #plot boundary
+            plt.scatter(xbndry,ybndry,s=10,c='k',marker='D')
         plt.show()
         
 def Graph(S,C,L,Gu):
