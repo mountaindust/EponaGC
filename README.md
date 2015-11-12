@@ -4,7 +4,15 @@ EponaGC
 Welcome to the invasive spread modeling program, EponaG(graph)C(control). 
 Author: Christopher Strickland (2013)
 
-Epona is a Python/Cython implementation of the model described in Strickland, Dangelmayr, Shipman (2014) "Modeling the presence probability of invasive plant species with nonlocal dispersal", *Journal of Mathematical Biology*, 69(2), 267--294. The network model, coupling and control in this software is an implementation of the model and optimal control described in Strickland, C. (2013), "The Mathematical Modeling and Analysis of Nonlocal Ecological Invasions and Savanna Population Dynamics", *Colorado State University*, PhD dissertation.
+Epona is a Python 2.7/Cython implementation of the model described in Strickland, Dangelmayr, Shipman (2014) "Modeling the presence probability of invasive plant species with nonlocal dispersal", *Journal of Mathematical Biology*, 69(2), 267--294. The network model, coupling and control in this software is an implementation of the model and optimal control described in Strickland, C. (2013), "The Mathematical Modeling and Analysis of Nonlocal Ecological Invasions and Savanna Population Dynamics", *Colorado State University*, PhD dissertation.
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------Important!! ------------------------------------------------
+
+This code was created while I was a graduate student, learning Python. I make no claim as to it's
+correctness or utility for any problem outside the project it was specifically created for. It is not 
+currently being developed, and you are on your own if you choose to use it for your own project.
+-----------------------------------------------------------------------------------------------------
 
 Dependencies
 ------------
@@ -17,7 +25,7 @@ Dependencies
 Installation: compiling the solver (necessary unless running Windows x64)
 --------------------
 
-IF YOU DO NOT PLAN ON EDITING THE SOURCE CODE OF THE SOLVER AND YOU ARE RUNNING WINDOWS x64, IGNORE ALL OF THIS. I'VE INCLUDED THE BINARY IN THE win_x64 FOLDER (EponaGSolverC.pyd). JUST COPY IT OVER INTO THE SAME FOLDER AS EponaGC.py, AND LIVE HAPPILY EVER AFTER.
+IF YOU DO NOT PLAN ON EDITING THE SOURCE CODE OF THE SOLVER AND YOU ARE RUNNING WINDOWS x64, IGNORE ALL OF THE FOLLOWING. I'VE INCLUDED THE BINARY IN THE win_x64 FOLDER (EponaGSolverC.pyd). JUST COPY IT OVER INTO THE SAME FOLDER AS EponaGC.py, AND LIVE HAPPILY EVER AFTER.
 
 In order to run this program, you will need a compiled version of EponaGSolverC.pyx that matches your operating system, placed in the same folder as EponaGC.py. I've included one for Windows x64 in win_x64, as that is the operating system I'm currently developing on (I know, I know...). Otherwise, assuming Cython is installed on your computer, along with a C compiler that is compatible with Python 2.7, you can do compile using the included setup.py. The command is:  
 python setup.py build_ext --inplace
