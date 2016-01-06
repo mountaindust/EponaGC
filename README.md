@@ -10,9 +10,8 @@ Epona is a Python 2.7/Cython implementation of the model described in Strickland
 -----------------------------------------Important!! ------------------------------------------------
 
 This code was created while I was a graduate student, learning Python. I make no claim as to it's
-correctness or utility for any problem outside the project it was specifically created for. It is not 
-currently being developed, and you are on your own if you choose to use it for your own project.
------------------------------------------------------------------------------------------------------
+correctness or utility for any problem outside the project it was specifically created for. 
+**It is not currently being developed, and you are on your own if you choose to use it for your own project.**
 
 Dependencies
 ------------
